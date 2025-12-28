@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "保險存摺保單顯示器",
+  "version": "1.0",
+  "permissions": ["scripting", "webRequest"],
+  "host_permissions": ["https://insurtech.lia-roc.org.tw/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://insurtech.lia-roc.org.tw/*"],
+      "js": ["messaging.js", "content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://insurtech.lia-roc.org.tw/*"],
+      "js": ["inject.js"],
+      "world": "MAIN"
+    }
+  ],
+  "description": "Reveal Insuretech for unpaid users.",
+  "background": {
+    "service_worker": "background.js"
+  }
+}
