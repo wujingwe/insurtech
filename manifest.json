@@ -1,9 +1,8 @@
 {
   "manifest_version": 3,
   "name": "保險存摺保單顯示器",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Reveal insurance details on insurtech.lia-roc.org.tw",
-  "host_permissions": ["https://insurtech.lia-roc.org.tw/*"],
   "background": {
     "service_worker": "background.js"
   },
