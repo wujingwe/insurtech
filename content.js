@@ -20,21 +20,21 @@ function unblock() {
     })
   });
 
+  const pathname = window.location.pathname;
+  if (pathname.includes("my_list.html")) {
+    processMyList(items);
+  } else if (pathname.includes("my_list_sub.html")) {
+    processMyListSub(items);
+  }
+}
+
+async function processMyList(items) {
   const idToken = sessionStorage.getItem("idToken");
   if (!idToken) {
     console.warn("No idToken in sessionStorage; skipping API flows");
     return;
   }
 
-  const pathname = window.location.pathname;
-  if (pathname.includes("my_list.html")) {
-    processMyList(items, idToken);
-  } else if (pathname.includes("my_list_sub.html")) {
-    processMyListSub(items, idToken);
-  }
-}
-
-async function processMyList(items, idToken) {
   const tasks = Array.from(items).map(async (li) => {
     if (li.classList.contains("processed")) return;
     li.classList.add("processed");
@@ -76,7 +76,13 @@ async function processMyList(items, idToken) {
   await Promise.all(tasks);
 }
 
-async function processMyListSub(items, idToken) {
+async function processMyListSub(items) {
+  const idToken = sessionStorage.getItem("idToken");
+  if (!idToken) {
+    console.warn("No idToken in sessionStorage; skipping API flows");
+    return;
+  }
+
   const tasks = Array.from(items).map(async (li, index) => {
     if (li.classList.contains("processed")) return;
     li.classList.add("processed");
