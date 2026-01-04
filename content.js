@@ -1,4 +1,7 @@
 function unblock() {
+  // Mark myself as a platinum member again
+  sessionStorage.setItem("memberLevel", "PLATINUM_MEMBER")
+
   const popup = document.querySelector("#noDatanoteiceMemberUpgrade")
   if (popup) {
     popup.style.display = "none";
@@ -49,27 +52,25 @@ async function processMyList(items) {
     const userType = select?.value ?? null;
 
     try {
-      const serverData = await sendMessageAsync("ipb201w/convenant", idToken, { cmpName, insNo, userType });
-      const data = serverData.data;
-      const content = data.content;
-      const memo = content.map(item => ({ fromTable: item.fromTable, tableId: item.tableId }));
-      sessionStorage.setItem(insNo, JSON.stringify(memo));
+      const { tableMemo, fromTable, tableId } = await createIpb201w({ idToken, cmpName, insNo, userType });
+      sessionStorage.setItem(insNo, JSON.stringify(tableMemo));
 
-      const insurance = content[0];
+      const { prodCode, askName, name } = await createIpb202w({ idToken, cmpName, insNo, userType, fromTable, tableId });
+
       const h5 = li.querySelector(".info h5");
-      if (h5 && insurance?.prodCode) h5.textContent = insurance.prodCode.trim();
+      if (h5 && prodCode) h5.textContent = prodCode;
 
       const spans = li.querySelectorAll("div.object span");
       if (spans && spans.length >= 2) {
-        if (insurance?.askName) spans[0].textContent = insurance.askName.trim();
-        if (insurance?.name) spans[1].textContent = insurance.name.trim();
+        if (askName) spans[0].textContent = askName;
+        if (name) spans[1].textContent = name;
       }
 
       const div = li.querySelector(".info");
       const payload = { cmpName, insNo, userType };
       processLink(div, payload);
     } catch (err) {
-      console.error("ipb201w/convenant failed", err);
+      console.error("createIpb201w failed", err);
     }
   });
 
@@ -122,15 +123,15 @@ async function processMyListSub(items) {
 
     const { fromTable, tableId } = memo[index];
     try {
-      const serverData = await sendMessageAsync("ipb202w", idToken, { cmpName, insNo, userType, fromTable, tableId });
-      const insurance = serverData.data;
+      const { prodCode, askName, name } = await createIpb202w({ idToken, cmpName, insNo, userType, fromTable, tableId });
+
       const h5 = li.querySelector(".info h5");
-      if (h5 && insurance?.prodCode) h5.textContent = insurance.prodCode.trim();
+      if (h5 && prodCode) h5.textContent = prodCode;
 
       const spans = li.querySelectorAll("div.object span");
       if (spans && spans.length >= 2) {
-        if (insurance?.askName) spans[0].textContent = insurance.askName.trim();
-        if (insurance?.name) spans[1].textContent = insurance.name.trim();
+        if (askName) spans[0].textContent = askName;
+        if (name) spans[1].textContent = name;
       }
 
       const div = li.querySelector(".info");

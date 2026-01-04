@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "保險存摺保單顯示器",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Reveal insurance details on insurtech.lia-roc.org.tw",
   "background": {
     "service_worker": "background.js"
@@ -9,7 +9,12 @@
   "content_scripts": [
     {
       "matches": ["https://insurtech.lia-roc.org.tw/*"],
-      "js": ["messaging.js", "content.js"],
+      "js": ["preload.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://insurtech.lia-roc.org.tw/*"],
+      "js": ["messaging.js", "ipb.js", "content.js"],
       "run_at": "document_idle"
     },
     {

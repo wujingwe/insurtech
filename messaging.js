@@ -7,14 +7,10 @@
  * @param {object} payload - data to send in the request body
  * @returns {Promise<any>} resolves with background `data` on success, rejects on error
  */
-function sendMessageAsync(action, idToken, payload) {
+function sendMessageAsync(path, idToken, payload) {
   return new Promise((resolve, reject) => {
-    if (!action || typeof action !== "string") {
-      return reject(new Error("sendMessageAsync: action must be a non-empty string"));
-    }
-
     try {
-      chrome.runtime.sendMessage({ action, idToken, payload }, (response) => {
+      chrome.runtime.sendMessage({ path, idToken, payload }, (response) => {
         const lastErr = chrome.runtime.lastError;
         if (lastErr) return reject(lastErr);
 
@@ -33,5 +29,3 @@ function sendMessageAsync(action, idToken, payload) {
     }
   });
 }
-
-window.sendMessageAsync = sendMessageAsync;
